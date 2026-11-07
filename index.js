@@ -80,7 +80,7 @@ app.get("/categories/name/:name", async (req, res) => {
     const { name } = req.params;
     const result = await pool.query(
       "SELECT * FROM categories WHERE name ILIKE $1",
-      [`%${name}%`],
+      ["%" + name + "%"],
     );
     res.json(result.rows);
   } catch (err) {
