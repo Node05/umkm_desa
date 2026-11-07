@@ -13,7 +13,6 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 
-// 1. POST - Tambah Kategori
 app.post("/categories", async (req, res) => {
   try {
     const { name, slug, description } = req.body;
@@ -27,7 +26,6 @@ app.post("/categories", async (req, res) => {
   }
 });
 
-// 2. GET - Ambil Semua Kategori
 app.get("/categories", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM categories");
@@ -37,7 +35,6 @@ app.get("/categories", async (req, res) => {
   }
 });
 
-// 3. GET - Ambil Kategori by ID
 app.get("/categories/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -50,7 +47,6 @@ app.get("/categories/:id", async (req, res) => {
   }
 });
 
-// 4. PUT - Update Kategori
 app.put("/categories/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -65,7 +61,6 @@ app.put("/categories/:id", async (req, res) => {
   }
 });
 
-// 5. DELETE - Hapus Kategori
 app.delete("/categories/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -78,4 +73,17 @@ app.delete("/categories/:id", async (req, res) => {
 
 app.listen(3000, () => {
   console.log("Server E-Commerce UMKM berjalan di port 3000");
+});
+
+app.get("/categories/name/:name", async (req, res) => {
+  try {
+    const { name } = req.params;
+    const result = await pool.query(
+      "SELECT * FROM categories WHERE name ILIKE $1",
+      [`%${name}%`],
+    );
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
